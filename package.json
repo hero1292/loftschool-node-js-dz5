@@ -1,0 +1,15 @@
+{
+  "name": "loftschool_dz5",
+  "version": "1.0.0",
+  "description": "Большая домашняя работа курса по Node.js - Корпоративная система _\"LoftSystem\"_.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hero1292/loftschool-node-js-dz4.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Evgenii Aleksanyan <hero1292@bk.ru>",
+  "license": "ISC"
+}
