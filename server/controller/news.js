@@ -61,7 +61,7 @@ exports.Update = (req, res) => {
 exports.Delete = (req, res) => {
   db.News
     .destroy({where: {Id: req.params.id}})
-    .then((result) => {
+    .then(() => {
       db.News
         .findAll({include: [{association: db.News.User}]})
         .then((newsCollection) => {

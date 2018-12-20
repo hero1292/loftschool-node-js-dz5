@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../config');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config')[env];
+const setCookie = require('../utils/set-cookie');
 const db = require('../db');
 const mapper = require('../maps/user');
 
@@ -31,14 +33,16 @@ exports.Login = (req, res) => {
   db.User
     .findOne({include: [{association: db.User.Permission}], where: {Name: req.body.username}})
     .then((user) => {
-      if (!user)
-        return res.status(400).send('No user found');
+      if (!user) return res.status(400).send('No user found');
       const passwordIsValid = bcrypt.compareSync(req.body.password, user.Password);
-      if (!passwordIsValid)
-        return res.status(401).send('Password not valid');
+      if (!passwordIsValid) return res.status(401).send('Password not valid');
 
       const response = mapper.Map(user);
       response['access_token'] = jwt.sign({id: user.Id}, config.authSecret, {expiresIn: 86400});
+      if (req.body.remembered) {
+        console.log('Access token saved to cookie');
+        setCookie(res, 'access_token', response['access_token']);
+      }
       return res.status(200).send(response);
     })
     .catch((err) => {

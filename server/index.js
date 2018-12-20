@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const http = require('http');
-const path = require('path');const env = process.env.NODE_ENV || 'development';
+const path = require('path');
+const env = process.env.NODE_ENV || 'development';
 const config = require('./config')[env];
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');

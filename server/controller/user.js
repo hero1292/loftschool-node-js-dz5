@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const config = require('../config');
+const jimp = require('jimp');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config')[env];
 const db = require('../db');
 const mapper = require('../maps/user');
 
@@ -45,7 +47,7 @@ exports.Update = (req, res) => {
           MiddleName: mappedUser.middleName,
           Password: mappedUser.password
         }, {where: {Id: mappedUser.id}})
-        .then((result) => {
+        .then(() => {
           mappedUser['access_token'] = jwt.sign({id: mappedUser.Id}, config.authSecret, {expiresIn: 86400});
           res.status(200).send(mappedUser);
         })
@@ -75,9 +77,16 @@ exports.Delete = (req, res) => {
 
 exports.SaveAvatar = (req, res) => {
   const avatarPath = path.join('./assets/img/avatars', req.file.filename);
+  const resizeAvatar = path.join('./dist/assets/img/avatars', req.file.filename);
   db.User
     .update({Avatar: avatarPath}, {where: {Id: req.params.id}})
-    .then((result) => {
+    .then(() => {
+      jimp.read(resizeAvatar, (err, image) => {
+        if (err) throw err;
+        image.resize(250, 250)
+          .quality(50)
+          .write(resizeAvatar);
+      });
       const response = {path: avatarPath};
       res.status(200).send(response);
     })
