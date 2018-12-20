@@ -1,7 +1,7 @@
-const database = require('../database');
+const db = require('../database');
 
 exports.Update = (req, res) => {
-  database.Permission
+  db.Permission
     .findOne({where: {Id: req.params.id}})
     .then((permission) => {
       if (!permission)
@@ -20,7 +20,7 @@ exports.Update = (req, res) => {
         });
       });
 
-      database.Permission
+      db.Permission
         .update({Value: permission.Value}, {where: {Id: permission.Id}})
         .then((result) => {
           res.status(200).send(result);

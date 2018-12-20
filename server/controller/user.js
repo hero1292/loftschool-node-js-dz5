@@ -1,19 +1,17 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-
 const config = require('../config');
-const database = require('../database');
-
-const userMapper = require('../mappers/user');
+const db = require('../database');
+const mapper = require('../mappers/user');
 
 exports.Get = (req, res) => {
-  database.User
-    .findAll({include: [{association: database.User.Permission}]})
+  db.User
+    .findAll({include: [{association: db.User.Permission}]})
     .then((users) => {
       const response = [];
       users.forEach(user => {
-        response.push(userMapper.Map(user))
+        response.push(mapper.Map(user))
       });
       res.status(200).send(response);
     })
@@ -25,11 +23,11 @@ exports.Get = (req, res) => {
 exports.Update = (req, res) => {
 
   console.log(`Updating user ${req.params.id}`);
-  database.User
-    .findOne({where: {Id: req.params.id}, include: [{association: database.User.Permission}]})
+  db.User
+    .findOne({where: {Id: req.params.id}, include: [{association: db.User.Permission}]})
     .then((user) => {
       console.log(`Found user: ${JSON.stringify(user)}`);
-      const mappedUser = userMapper.Map(user);
+      const mappedUser = mapper.Map(user);
       console.log(`Mapped user: ${JSON.stringify(mappedUser)}`);
       const changedFields = req.body;
       console.log(`Changed fields: ${JSON.stringify(changedFields)}`);
@@ -40,7 +38,7 @@ exports.Update = (req, res) => {
         else mappedUser[fieldName] = changedFields[fieldName];
       });
       console.log(`Updating user: ${JSON.stringify(mappedUser)}`);
-      database.User
+      db.User
         .update({
           FirstName: mappedUser.firstName,
           LastName: mappedUser.surName,
@@ -61,7 +59,7 @@ exports.Update = (req, res) => {
 };
 
 exports.Delete = (req, res) => {
-  database.User.findOne({where: {id: req.params.id}})
+  db.User.findOne({where: {id: req.params.id}})
     .then((user) => {
       if (user) {
         user.destroy()
@@ -77,7 +75,7 @@ exports.Delete = (req, res) => {
 
 exports.SaveAvatar = (req, res) => {
   const avatarPath = path.join('./assets/img/avatars', req.file.filename);
-  database.User
+  db.User
     .update({Avatar: avatarPath}, {where: {Id: req.params.id}})
     .then((result) => {
       const response = {path: avatarPath};

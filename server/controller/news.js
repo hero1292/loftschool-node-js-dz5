@@ -1,9 +1,8 @@
-const database = require('../database');
-
-const newsMapper = require('../mappers/news');
+const db = require('../database');
+const mapper = require('../mappers/news');
 
 exports.Create = (req, res) => {
-  database.News
+  db.News
     .create({
       Theme: req.body.theme,
       Text: req.body.text,
@@ -18,12 +17,12 @@ exports.Create = (req, res) => {
 };
 
 exports.Get = (req, res) => {
-  database.News
-    .findAll({include: [{association: database.News.User}]})
+  db.News
+    .findAll({include: [{association: db.News.User}]})
     .then((newsCollection) => {
       const response = [];
       newsCollection.forEach((news) => {
-        response.push(newsMapper.Map(news))
+        response.push(mapper.Map(news))
       });
       res.status(200).send(response);
     })
@@ -33,7 +32,7 @@ exports.Get = (req, res) => {
 };
 
 exports.Update = (req, res) => {
-  database.News
+  db.News
     .update({
       Theme: req.body.theme,
       Text: req.body.text,
@@ -41,12 +40,12 @@ exports.Update = (req, res) => {
       UserId: parseInt(req.body.userId)
     }, {where: {Id: req.params.id}})
     .then((news) => {
-      database.News
-        .findAll({include: [{association: database.News.User}]})
+      db.News
+        .findAll({include: [{association: db.News.User}]})
         .then((newsCollection) => {
           const response = [];
           newsCollection.forEach((news) => {
-            response.push(newsMapper.Map(news))
+            response.push(mapper.Map(news))
           });
           res.status(200).send(response);
         })
@@ -60,15 +59,15 @@ exports.Update = (req, res) => {
 };
 
 exports.Delete = (req, res) => {
-  database.News
+  db.News
     .destroy({where: {Id: req.params.id}})
     .then((result) => {
-      database.News
-        .findAll({include: [{association: database.News.User}]})
+      db.News
+        .findAll({include: [{association: db.News.User}]})
         .then((newsCollection) => {
           const response = [];
           newsCollection.forEach((news) => {
-            response.push(newsMapper.Map(news))
+            response.push(mapper.Map(news))
           });
           res.status(200).send(response);
         })

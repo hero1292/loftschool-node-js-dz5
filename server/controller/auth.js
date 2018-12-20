@@ -1,14 +1,12 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
 const config = require('../config');
-const database = require('../database');
-
-const userMapper = require('../mappers/user');
+const db = require('../database');
+const mapper = require('../mappers/user');
 
 exports.Register = (req, res) => {
   console.log(`Permission: ${JSON.stringify(req.body.permission)}`);
-  database.User
+  db.User
     .create({
       Name: req.body.username,
       Password: bcrypt.hashSync(req.body.password, 8),
@@ -17,9 +15,9 @@ exports.Register = (req, res) => {
       MiddleName: req.body.middleName,
       Avatar: req.body.img,
       Permission: req.body.permission
-    }, {include: [{association: database.User.Permission}]})
+    }, {include: [{association: db.User.Permission}]})
     .then((user) => {
-      const response = userMapper.Map(user);
+      const response = mapper.Map(user);
       response['access_token'] = jwt.sign({id: user.Id}, config.authSecret, {expiresIn: 86400}); // expires in 24 hours;
       res.status(200).send(response);
     })
@@ -30,8 +28,8 @@ exports.Register = (req, res) => {
 
 exports.Login = (req, res) => {
   console.log(`Passed username: ${req.body.username}`);
-  database.User
-    .findOne({include: [{association: database.User.Permission}], where: {Name: req.body.username}})
+  db.User
+    .findOne({include: [{association: db.User.Permission}], where: {Name: req.body.username}})
     .then((user) => {
       if (!user)
         return res.status(400).send('No user found');
@@ -39,7 +37,7 @@ exports.Login = (req, res) => {
       if (!passwordIsValid)
         return res.status(401).send('Password not valid');
 
-      const response = userMapper.Map(user);
+      const response = mapper.Map(user);
       response['access_token'] = jwt.sign({id: user.Id}, config.authSecret, {expiresIn: 86400});
       return res.status(200).send(response);
     })
@@ -57,7 +55,7 @@ exports.AuthFromToken = (req, res) => {
   const decodedToken = jwt.decode(accessToken, config.authSecret);
   if (!decodedToken) return res.status(400).send({error: 'Could not decode access token'});
 
-  database.User.findOne({where: {id: decodedToken.id}})
+  db.User.findOne({where: {id: decodedToken.id}})
     .then((user) => {
       if (!user) return res.status(400).send({error: 'User not found'});
       req.session.accessToken = accessToken;
