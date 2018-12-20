@@ -1,7 +1,7 @@
 module.exports = {
   development: {
     port: 3000,
-    authSecret: 'loftschool',
+    authSecret: 'loftschooldevelopment',
     database: {
       host: 'localhost',
       name: 'test',
@@ -13,7 +13,7 @@ module.exports = {
   },
   production: {
     port: 3000,
-    authSecret: 'loftschool',
+    authSecret: 'loftschoolproduction',
     database: {
       host: 'ec2-54-243-212-227.compute-1.amazonaws.com',
       name: 'd3baibcdftgkuo',
