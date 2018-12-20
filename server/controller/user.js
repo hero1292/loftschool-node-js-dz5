@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const config = require('../config');
-const db = require('../database');
-const mapper = require('../mappers/user');
+const db = require('../db');
+const mapper = require('../maps/user');
 
 exports.Get = (req, res) => {
   db.User

@@ -1,5 +1,5 @@
-const db = require('../database');
-const mapper = require('../mappers/news');
+const db = require('../db');
+const mapper = require('../maps/news');
 
 exports.Create = (req, res) => {
   db.News

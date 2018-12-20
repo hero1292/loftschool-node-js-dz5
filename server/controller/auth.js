@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
-const db = require('../database');
-const mapper = require('../mappers/user');
+const db = require('../db');
+const mapper = require('../maps/user');
 
 exports.Register = (req, res) => {
   console.log(`Permission: ${JSON.stringify(req.body.permission)}`);

@@ -1,5 +1,6 @@
 const path = require('path');
-const config = require('../config');
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config')[env];
 const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize(
@@ -17,24 +18,13 @@ const sequelize = new Sequelize(
       idle: 10000
     },
     dialectOptions: {
-      ssl: false
+      ssl: config.database.ssl
     },
     define: {
       timestamps: false
     }
   }
 );
-
-// const sequelize = new Sequelize('test', 'postgres', '12345', {
-//   host: 'localhost',
-//   dialect: 'postgres',
-//   pool: {
-//     max: 5,
-//     min: 0,
-//     acquire: 30000,
-//     idle: 10000,
-//   },
-// });
 
 sequelize.sync();
 sequelize

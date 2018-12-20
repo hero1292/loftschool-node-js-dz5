@@ -1,5 +1,5 @@
 module.exports = (router) => {
-  const userController = require('../controllers/user');
+  const userController = require('../controller/user');
   router.get('/api/getUsers', userController.Get);
   router.put('/api/updateUser/:id', userController.Update);
   router.delete('/api/deleteUser/:id', userController.Delete);
