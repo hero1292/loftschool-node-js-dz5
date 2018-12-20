@@ -2,14 +2,37 @@
   "name": "loftschool_dz5",
   "version": "1.0.0",
   "description": "Большая домашняя работа курса по Node.js - Корпоративная система _\"LoftSystem\"_.",
-  "main": "index.js",
+  "main": "server",
   "repository": {
     "type": "git",
     "url": "https://github.com/hero1292/loftschool-node-js-dz5.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server"
   },
   "author": "Evgenii Aleksanyan <hero1292@bk.ru>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "jimp": "^0.6.0",
+    "jsonwebtoken": "^8.4.0",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "pg": "^7.7.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.41.2",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  }
 }
